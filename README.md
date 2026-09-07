@@ -23,7 +23,21 @@
 
 ---
 
-## 2. 快速开始
+## 2. 架构与核心设计 (Architecture & Design)
+
+本项目基于 MongoDB 8.0 搭建了 3 节点的副本集（Replica Set），针对客户端因果一致性（Client-Centric Consistency）展开研究。
+
+### 1. 端口隔离与容器网络映射
+为了在单机（Localhost）环境下完美模拟真实分布式集群，并彻底解决多节点对外的端口冲突与通信死锁问题，我们采用了**内部端口错位 + 外部端口映射**的策略：
+- **`mongo1`**: 内部运行在 `27017`，映射到宿主机 `27017`（担任初始 Primary 节点）
+- **`mongo2`**: 内部运行在 `27018`，映射到宿主机 `27018`（Secondary 节点）
+- **`mongo3`**: 内部运行在 `27019`，映射到宿主机 `27019`（Secondary 节点）
+
+搭配本地 `hosts` 文件解析（`127.0.0.1 mongo1 mongo2 mongo3`），使得 Python 驱动能够准确识别并连接到对应的集群成员。
+
+---
+
+## 3. 快速开始
 
 ### Step 1：克隆项目
 
@@ -137,7 +151,7 @@ python setup/init_replica.py
 
 ---
 
-## 3. 运行 RYW 实验
+## 4. 运行 RYW 实验
 
 RYW（Read Your Writes，读己之写）实验可以通过以下命令运行：
 
@@ -158,7 +172,7 @@ python experiments/ryw.py --write-concern 1 --read-concern local --scenario norm
 
 ---
 
-## 4. 项目实验内容
+## 5. 项目实验内容
 
 整个项目主要包含以下实验：
 
@@ -173,7 +187,7 @@ python experiments/ryw.py --write-concern 1 --read-concern local --scenario norm
 
 ---
 
-## 5. 推荐运行流程
+## 6. 推荐运行流程
 
 首次运行项目时，按照以下顺序执行即可：
 
