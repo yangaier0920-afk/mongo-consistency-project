@@ -636,9 +636,9 @@ mongo-consistency-project_mongodb-network \
 ---
 
 
-# 12. 四种 Client-Centric Consistency 的结果比较
+# 13. 四种 Client-Centric Consistency 的结果比较
 
-## 12.1 RYW
+## 13.1 RYW
 
 弱配置下：
 
@@ -670,7 +670,7 @@ observed_version < written_version
 
 ---
 
-## 12.2 MR
+## 13.2 MR
 
 弱配置：
 
@@ -704,7 +704,7 @@ version = 98
 
 ---
 
-## 12.3 MW
+## 13.3 MW
 
 所有实验均为：
 
@@ -737,7 +737,7 @@ MongoDB 的单 PRIMARY 写入模式以及 replication ordering 可能使 Seconda
 
 ---
 
-## 12.4 WFR
+## 13.4 WFR
 
 WFR 弱配置的 violation rate 明显低于 RYW 和 MR：
 
@@ -767,7 +767,7 @@ v1 visible = False
 
 ---
 
-# 13. Strong Configuration 总体结果
+# 14. Strong Configuration 总体结果
 
 强配置：
 
@@ -781,7 +781,7 @@ Causal Session = True
 
 | Model | Normal | Failure | Partition |
 | --- | ---: | ---: | ---: |
-| RYW | 未观察到 violation | 0.00% | 0.00% |
+| RYW | 0.10% | 0.00% | 0.00% |
 | MR | 0.00% | 0.00% | 0.00% |
 | MW | 0.00% | 0.00% | 0.00% |
 | WFR | 0.00% | 0.00% | 0.00% |
@@ -804,7 +804,7 @@ Causal Session = True
 
 ---
 
-# 14. Replica Set Failover 观察
+# 15. Replica Set Failover 观察
 
 Primary Failure 和 Network Partition 都成功触发了 Replica Set 的 PRIMARY 切换。
 
@@ -841,7 +841,7 @@ mongo1 always PRIMARY
 
 ---
 
-# 15. Availability 与 Failover
+# 16. Availability 与 Failover
 
 本项目使用 3 节点 Replica Set。
 
@@ -877,12 +877,12 @@ Application continues
 
 ---
 
-# 16. 实验结果总表
+# 17. 实验结果总表
 
 ## Normal Scenario
 
 | Model | Weak | Strong |
-| --- | ---: | ---: |
+| RYW | 1.8% | 0.10%: |
 | MR | 6.10% | 0.00% |
 | MW | 0.00% | 0.00% |
 | WFR | 5.20% | 0.00% |
@@ -918,7 +918,7 @@ results/raw/ryw_normal_wmajority_rmajority.csv
 
 ---
 
-# 17. 综合结果
+# 18. 综合结果
 
 本项目最明显的实验结果是：
 
