@@ -334,3 +334,630 @@ docker-compose up -d
 ```
 
 然后直接运行对应的实验脚本即可。
+
+
+## 10. Writes-Follow-Reads（WFR）实验
+
+Writes-Follow-Reads（WFR，写跟随读）用于验证：
+
+> 如果客户端 B 已经读取到了某个版本 `v1`，那么客户端 B 后续产生的写入 `v2` 应当保持对 `v1` 的因果依赖关系。
+
+本项目通过两个客户端模拟 WFR：
+
+```text
+Client A writes v1
+        ↓
+Client B reads v1
+        ↓
+Client B writes v2
+        ↓
+v2 explicitly depends on v1
+        ↓
+Observe v1 and v2 from a Secondary
+```
+
+其中：
+
+```text
+v1 = prerequisite write
+v2 = dependent write
+```
+
+`v2` 会显式记录：
+
+```text
+depends_on = v1
+```
+
+---
+
+## 10.1 WFR Violation 判定
+
+如果 Secondary 上出现：
+
+```text
+v2 visible = True
+v1 visible = False
+```
+
+表示：
+
+> Secondary 已经观察到了依赖写 `v2`，但还没有观察到它所依赖的 `v1`。
+
+此时记录：
+
+```text
+WFR violation
+```
+
+---
+
+## 10.2 WFR 正常场景弱配置
+
+配置：
+
+```text
+WriteConcern   = 1
+ReadConcern    = local
+Causal Session = False
+Scenario       = normal
+Iterations     = 1000
+```
+
+运行：
+
+```bash
+python experiments/wfr.py \
+  --write-concern 1 \
+  --read-concern local \
+  --scenario normal \
+  --iterations 1000
+```
+
+实验结果：
+
+| 指标 | 结果 |
+| --- | ---: |
+| Iterations | 1000 |
+| Successful Operations | 1000 |
+| Failed Operations | 0 |
+| WFR Violations | 52 |
+| Violation Rate | 5.20% |
+
+结果文件：
+
+```text
+results/raw/wfr_normal_w1_rlocal_causalfalse.csv
+```
+
+弱配置下观察到了 WFR violation。
+
+---
+
+## 10.3 WFR 正常场景强配置
+
+配置：
+
+```text
+WriteConcern   = majority
+ReadConcern    = majority
+Causal Session = True
+Scenario       = normal
+Iterations     = 1000
+```
+
+运行：
+
+```bash
+python experiments/wfr.py \
+  --write-concern majority \
+  --read-concern majority \
+  --scenario normal \
+  --iterations 1000 \
+  --causal-session
+```
+
+实验结果：
+
+| 指标 | 结果 |
+| --- | ---: |
+| Iterations | 1000 |
+| Successful Operations | 1000 |
+| Failed Operations | 0 |
+| WFR Violations | 0 |
+| Violation Rate | 0.00% |
+
+结果文件：
+
+```text
+results/raw/wfr_normal_wmajority_rmajority_causaltrue.csv
+```
+
+本次强配置实验中没有观察到 WFR violation。
+
+---
+
+# 11. Primary Failure 实验
+
+为了研究节点故障对 Client-Centric Consistency 的影响，本项目设计了自动 Primary Failure Injection。
+
+实验脚本不会假设：
+
+```text
+mongo1 = PRIMARY
+```
+
+而是在故障注入前动态检测当前 PRIMARY。
+
+---
+
+## 11.1 Failure 流程
+
+所有 Failure 实验采用相同的时间线：
+
+```text
+Iteration 1-199
+      ↓
+正常运行
+
+Iteration 200
+      ↓
+自动检测当前 PRIMARY
+      ↓
+docker stop PRIMARY
+      ↓
+Replica Set election
+
+Iteration 200-599
+      ↓
+Primary Failure 状态
+
+Iteration 600
+      ↓
+docker start 原故障节点
+
+Iteration 600-1000
+      ↓
+Recovery 状态
+```
+
+注意：
+
+被恢复的节点不一定重新成为 PRIMARY。
+
+例如：
+
+```text
+Before failure:
+mongo1 PRIMARY
+
+After failure:
+mongo2 PRIMARY
+
+mongo1 restart
+
+After recovery:
+mongo2 PRIMARY
+mongo1 SECONDARY
+```
+
+---
+
+## 11.2 Primary Failure 结果
+
+| Consistency Model | Weak Violations | Weak Rate | Strong Violations | Strong Rate |
+| --- | ---: | ---: | ---: | ---: |
+| RYW | 817 / 1000 | 81.70% | 0 / 1000 | 0.00% |
+| MR | 292 / 2000 | 14.60% | 0 / 2000 | 0.00% |
+| MW | 0 / 1000 | 0.00% | 0 / 1000 | 0.00% |
+| WFR | 22 / 1000 | 2.20% | 0 / 1000 | 0.00% |
+
+---
+
+
+
+# 12. Network Partition 实验
+
+Network Partition 与 Primary Failure 不同。
+
+Primary Failure：
+
+```text
+docker stop mongoX
+```
+
+MongoDB 进程停止。
+
+Network Partition：
+
+```text
+docker network disconnect ...
+```
+
+MongoDB 容器仍然运行，但是不能和其他 Replica Set 节点通信。
+
+---
+
+## 12.1 Network Partition 流程
+
+统一流程为：
+
+```text
+Iteration 1-199
+      ↓
+正常运行
+
+Iteration 200
+      ↓
+动态检测当前 PRIMARY
+      ↓
+Disconnect PRIMARY from Docker network
+
+Iteration 200-599
+      ↓
+Network Partition
+
+Iteration 600
+      ↓
+Reconnect original node
+
+Iteration 600-1000
+      ↓
+Recovery
+```
+
+实际使用：
+
+```bash
+docker network disconnect -f \
+mongo-consistency-project_mongodb-network \
+<primary-container>
+```
+
+恢复：
+
+```bash
+docker network connect \
+mongo-consistency-project_mongodb-network \
+<partitioned-container>
+```
+
+---
+
+## 12.2 Network Partition 结果
+
+| Consistency Model | Weak Violations | Weak Rate | Strong Violations | Strong Rate |
+| --- | ---: | ---: | ---: | ---: |
+| RYW | 965 / 1000 | 96.50% | 0 / 1000 | 0.00% |
+| MR | 330 / 2000 | 16.50% | 0 / 2000 | 0.00% |
+| MW | 0 / 1000 | 0.00% | 0 / 1000 | 0.00% |
+| WFR | 18 / 1000 | 1.80% | 0 / 1000 | 0.00% |
+
+---
+
+
+# 12. 四种 Client-Centric Consistency 的结果比较
+
+## 12.1 RYW
+
+弱配置下：
+
+```text
+Failure:
+81.70%
+
+Partition:
+96.50%
+```
+
+RYW 对 replication lag 非常敏感。
+
+实验中：
+
+```text
+WRITE to Primary
+       ↓
+immediate READ from Secondary
+```
+
+Secondary 如果还没有复制最新写入，就会发生：
+
+```text
+observed_version < written_version
+```
+
+因此 RYW 的 violation rate 最高。
+
+---
+
+## 12.2 MR
+
+弱配置：
+
+```text
+Failure:
+14.60%
+
+Partition:
+16.50%
+```
+
+客户端从 Primary 读取新版本后，再从复制进度较慢的 Secondary 读取时，可能发生版本倒退。
+
+例如：
+
+```text
+READ Primary
+version = 100
+
+READ Secondary
+version = 98
+```
+
+则：
+
+```text
+98 < 100
+```
+
+属于 MR violation。
+
+---
+
+## 12.3 MW
+
+所有实验均为：
+
+```text
+0.00%
+```
+
+这说明在当前 workload 中没有观察到：
+
+```text
+较新的 write 可见
+但前面的 write 缺失
+```
+
+MongoDB 的单 PRIMARY 写入模式以及 replication ordering 可能使 Secondary 更常表现为一个较旧但有序的 prefix。
+
+因此可能观察：
+
+```text
+1 2 3 4 5
+```
+
+而 PRIMARY 已经：
+
+```text
+1 2 3 4 5 6 7 8
+```
+
+这属于 stale replica，但不属于 Monotonic Writes violation。
+
+---
+
+## 12.4 WFR
+
+WFR 弱配置的 violation rate 明显低于 RYW 和 MR：
+
+```text
+Normal:
+5.20%
+
+Primary Failure:
+2.20%
+
+Network Partition:
+1.80%
+```
+
+原因是 WFR violation 的条件更严格。
+
+必须同时满足：
+
+```text
+v2 visible = True
+v1 visible = False
+```
+
+才被视为 violation。
+
+因此普通的 stale read 并不一定构成 WFR violation。
+
+---
+
+# 13. Strong Configuration 总体结果
+
+强配置：
+
+```text
+WriteConcern   = majority
+ReadConcern    = majority
+Causal Session = True
+```
+
+在本次实验中：
+
+| Model | Normal | Failure | Partition |
+| --- | ---: | ---: | ---: |
+| RYW | 未观察到 violation | 0.00% | 0.00% |
+| MR | 0.00% | 0.00% | 0.00% |
+| MW | 0.00% | 0.00% | 0.00% |
+| WFR | 0.00% | 0.00% | 0.00% |
+
+因此：
+
+> 在本项目的实验环境和 workload 下，`majority` read/write concern 配合 causal session 能显著改善应用观察到的 Client-Centric Consistency。
+
+需要注意：
+
+```text
+0 violation
+```
+
+表示：
+
+> 本次有限实验中没有观察到 violation。
+
+并不表示对所有可能执行情况进行了形式化证明。
+
+---
+
+# 14. Replica Set Failover 观察
+
+Primary Failure 和 Network Partition 都成功触发了 Replica Set 的 PRIMARY 切换。
+
+例如：
+
+```text
+Before fault:
+mongo1 PRIMARY
+
+Fault injected:
+mongo1 unavailable
+
+After election:
+mongo2 PRIMARY
+```
+
+另外一次可能为：
+
+```text
+Before:
+mongo2 PRIMARY
+
+After fault:
+mongo3 PRIMARY
+```
+
+说明实验脚本不能假设：
+
+```text
+mongo1 always PRIMARY
+```
+
+因此所有故障脚本均动态检测当前 PRIMARY。
+
+---
+
+# 15. Availability 与 Failover
+
+本项目使用 3 节点 Replica Set。
+
+当一个 PRIMARY 故障或被隔离时：
+
+```text
+3 nodes
+↓
+1 node unavailable
+↓
+2 nodes remain
+↓
+2 / 3 = majority
+```
+
+剩余两个节点仍然能够形成多数派并进行 PRIMARY election。
+
+因此：
+
+```text
+Old PRIMARY unavailable
+        ↓
+Election
+        ↓
+New PRIMARY
+        ↓
+PyMongo topology update
+        ↓
+Application continues
+```
+
+在本次实验记录中，大多数业务操作均能在 scripted failover 后继续完成。
+
+---
+
+# 16. 实验结果总表
+
+## Normal Scenario
+
+| Model | Weak | Strong |
+| --- | ---: | ---: |
+| MR | 6.10% | 0.00% |
+| MW | 0.00% | 0.00% |
+| WFR | 5.20% | 0.00% |
+
+RYW 正常场景结果保存在：
+
+```text
+results/raw/ryw_normal_w1_rlocal.csv
+results/raw/ryw_normal_wmajority_rmajority.csv
+```
+
+---
+
+## Primary Failure
+
+| Model | Weak | Strong |
+| --- | ---: | ---: |
+| RYW | 81.70% | 0.00% |
+| MR | 14.60% | 0.00% |
+| MW | 0.00% | 0.00% |
+| WFR | 2.20% | 0.00% |
+
+---
+
+## Network Partition
+
+| Model | Weak | Strong |
+| --- | ---: | ---: |
+| RYW | 96.50% | 0.00% |
+| MR | 16.50% | 0.00% |
+| MW | 0.00% | 0.00% |
+| WFR | 1.80% | 0.00% |
+
+---
+
+# 17. 综合结果
+
+本项目最明显的实验结果是：
+
+> **Consistency configuration 对 Client-Centric Consistency 的影响比故障类型本身更加明显和稳定。**
+
+弱配置：
+
+```text
+w = 1
+readConcern = local
+causal consistency = disabled
+```
+
+实验表现：
+
+| Model | 观察结果 |
+| --- | --- |
+| RYW | 大量 violation |
+| MR | 存在明显 violation |
+| MW | 未观察到 violation |
+| WFR | 少量 violation |
+
+强配置：
+
+```text
+w = majority
+readConcern = majority
+causal consistency = enabled
+```
+
+实验表现：
+
+```text
+RYW → no observed violations
+MR  → no observed violations
+MW  → no observed violations
+WFR → no observed violations
+```
+
+Primary Failure 和 Network Partition 会触发 election 和 topology change，但并没有产生一个统一的 violation-rate 增减规律。
+
+---
