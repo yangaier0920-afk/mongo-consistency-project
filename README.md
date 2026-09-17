@@ -636,140 +636,230 @@ mongo-consistency-project_mongodb-network \
 ---
 
 
-# 13. 四种 Client-Centric Consistency 的结果比较
+# Member 3 实验运行说明
 
-## 13.1 RYW
+本部分说明如何在另一台电脑上运行以下实验：
 
-弱配置下：
+- Writes-Follow-Reads（WFR）
+- RYW Primary Failure / Network Partition
+- MR Primary Failure / Network Partition
+- MW Primary Failure / Network Partition
+- WFR Primary Failure / Network Partition
 
-```text
-Failure:
-81.70%
-
-Partition:
-96.50%
-```
-
-RYW 对 replication lag 非常敏感。
-
-实验中：
+这些实验均基于项目中已经搭建好的：
 
 ```text
-WRITE to Primary
-       ↓
-immediate READ from Secondary
+Docker
+MongoDB Replica Set
+Python
+PyMongo
 ```
-
-Secondary 如果还没有复制最新写入，就会发生：
-
-```text
-observed_version < written_version
-```
-
-因此 RYW 的 violation rate 最高。
 
 ---
 
-## 13.2 MR
+# 1. 前置条件
 
-弱配置：
+在运行实验之前，请确认已经完成以下步骤：
 
-```text
-Failure:
-14.60%
+1. 已克隆项目仓库
+2. 已安装 Docker
+3. 已安装 Python
+4. 已创建并激活 Python 虚拟环境
+5. 已安装 `requirements.txt`
+6. 已启动三个 MongoDB Docker 容器
+7. 已完成 Replica Set 初始化
 
-Partition:
-16.50%
+---
+
+# 2. 克隆项目
+
+```bash
+git clone <your-github-repo-url>
+cd mongo-consistency-project
 ```
 
-客户端从 Primary 读取新版本后，再从复制进度较慢的 Secondary 读取时，可能发生版本倒退。
+---
+
+# 3. 创建并激活 Python 虚拟环境
+
+## Mac / Linux
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Windows
+
+```powershell
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+激活成功后，终端前面通常会出现：
+
+```text
+(venv)
+```
+
+---
+
+# 4. 启动 MongoDB 容器
+
+在项目根目录运行：
+
+```bash
+docker-compose up -d
+```
+
+检查：
+
+```bash
+docker ps
+```
+
+应看到：
+
+```text
+mongo1
+mongo2
+mongo3
+```
+
+都处于运行状态。
+
+---
+
+# 5. 检查 Replica Set 状态
+
+运行：
+
+```bash
+docker exec mongo1 mongosh --quiet --eval \
+'rs.status().members.forEach(m => print(m.name, m.stateStr))'
+```
+
+正常情况下应看到：
+
+```text
+1 PRIMARY
+2 SECONDARY
+```
 
 例如：
 
 ```text
-READ Primary
-version = 100
-
-READ Secondary
-version = 98
+mongo1:27017 PRIMARY
+mongo2:27018 SECONDARY
+mongo3:27019 SECONDARY
 ```
 
-则：
+需要注意：
 
-```text
-98 < 100
-```
+> PRIMARY 不一定永远是 `mongo1`。
 
-属于 MR violation。
+Failure 和 Partition 实验脚本会自动检测当前 PRIMARY，不需要手动修改代码。
 
 ---
 
-## 13.3 MW
+# 6. 检查 Docker Network
 
-所有实验均为：
-
-```text
-0.00%
-```
-
-这说明在当前 workload 中没有观察到：
+Network Partition 实验依赖 Docker 网络：
 
 ```text
-较新的 write 可见
-但前面的 write 缺失
+mongo-consistency-project_mongodb-network
 ```
 
-MongoDB 的单 PRIMARY 写入模式以及 replication ordering 可能使 Secondary 更常表现为一个较旧但有序的 prefix。
+检查：
 
-因此可能观察：
+```bash
+docker network ls
+```
+
+应看到：
 
 ```text
-1 2 3 4 5
+mongo-consistency-project_mongodb-network
 ```
 
-而 PRIMARY 已经：
+进一步检查三个 MongoDB 节点是否都在网络中：
+
+```bash
+docker network inspect mongo-consistency-project_mongodb-network
+```
+
+输出中的 `Containers` 应包含：
 
 ```text
-1 2 3 4 5 6 7 8
+mongo1
+mongo2
+mongo3
 ```
-
-这属于 stale replica，但不属于 Monotonic Writes violation。
 
 ---
 
-## 13.4 WFR
+# 7. 实验脚本
 
-WFR 弱配置的 violation rate 明显低于 RYW 和 MR：
-
-```text
-Normal:
-5.20%
-
-Primary Failure:
-2.20%
-
-Network Partition:
-1.80%
-```
-
-原因是 WFR violation 的条件更严格。
-
-必须同时满足：
+Member 3 相关实验文件：
 
 ```text
-v2 visible = True
-v1 visible = False
+experiments/wfr.py
+
+experiments/ryw_failure.py
+experiments/monotonic_reads_failure.py
+experiments/monotonic_writes_failure.py
+experiments/wfr_failure.py
+
+experiments/ryw_partition.py
+experiments/monotonic_reads_partition.py
+experiments/monotonic_writes_partition.py
+experiments/wfr_partition.py
 ```
-
-才被视为 violation。
-
-因此普通的 stale read 并不一定构成 WFR violation。
 
 ---
 
-# 14. Strong Configuration 总体结果
+# 8. WFR 正常实验
 
-强配置：
+## 8.1 弱配置
+
+```bash
+python experiments/wfr.py \
+  --write-concern 1 \
+  --read-concern local \
+  --scenario normal \
+  --iterations 1000
+```
+
+配置为：
+
+```text
+WriteConcern   = 1
+ReadConcern    = local
+Causal Session = False
+```
+
+结果文件：
+
+```text
+results/raw/wfr_normal_w1_rlocal_causalfalse.csv
+```
+
+---
+
+## 8.2 强配置
+
+```bash
+python experiments/wfr.py \
+  --write-concern majority \
+  --read-concern majority \
+  --scenario normal \
+  --iterations 1000 \
+  --causal-session
+```
+
+配置为：
 
 ```text
 WriteConcern   = majority
@@ -777,187 +867,672 @@ ReadConcern    = majority
 Causal Session = True
 ```
 
-在本次实验中：
-
-| Model | Normal | Failure | Partition |
-| --- | ---: | ---: | ---: |
-| RYW | 0.10% | 0.00% | 0.00% |
-| MR | 0.00% | 0.00% | 0.00% |
-| MW | 0.00% | 0.00% | 0.00% |
-| WFR | 0.00% | 0.00% | 0.00% |
-
-因此：
-
-> 在本项目的实验环境和 workload 下，`majority` read/write concern 配合 causal session 能显著改善应用观察到的 Client-Centric Consistency。
-
-需要注意：
+结果文件：
 
 ```text
-0 violation
+results/raw/wfr_normal_wmajority_rmajority_causaltrue.csv
 ```
-
-表示：
-
-> 本次有限实验中没有观察到 violation。
-
-并不表示对所有可能执行情况进行了形式化证明。
 
 ---
 
-# 15. Replica Set Failover 观察
+# 9. Primary Failure 实验
 
-Primary Failure 和 Network Partition 都成功触发了 Replica Set 的 PRIMARY 切换。
+Failure 实验统一采用以下流程：
+
+```text
+Iteration 1-199
+正常运行
+
+Iteration 200
+自动检测当前 PRIMARY
+docker stop 当前 PRIMARY
+
+Iteration 200-599
+Replica Set failover 后继续运行
+
+Iteration 600
+docker start 原故障节点
+
+Iteration 600-1000
+恢复后继续运行
+```
+
+脚本会自动检测 PRIMARY，因此不要手动写死：
+
+```text
+mongo1
+```
+
+---
+
+# 10. RYW Failure
+
+## 弱配置
+
+```bash
+python experiments/ryw_failure.py \
+  --scenario failure \
+  --write-concern 1 \
+  --read-concern local \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/ryw_failure_w1_rlocal_causalfalse.csv
+```
+
+## 强配置
+
+```bash
+python experiments/ryw_failure.py \
+  --scenario failure \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/ryw_failure_wmajority_rmajority_causaltrue.csv
+```
+
+---
+
+# 11. MR Failure
+
+## 弱配置
+
+```bash
+python experiments/monotonic_reads_failure.py \
+  --scenario failure \
+  --write-concern 1 \
+  --read-concern local \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/mr_failure_w1_rlocal_causalfalse.csv
+```
+
+## 强配置
+
+```bash
+python experiments/monotonic_reads_failure.py \
+  --scenario failure \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/mr_failure_wmajority_rmajority_causaltrue.csv
+```
+
+---
+
+# 12. MW Failure
+
+## 弱配置
+
+```bash
+python experiments/monotonic_writes_failure.py \
+  --scenario failure \
+  --write-concern 1 \
+  --read-concern local \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/mw_failure_w1_rlocal_causalfalse.csv
+```
+
+## 强配置
+
+```bash
+python experiments/monotonic_writes_failure.py \
+  --scenario failure \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/mw_failure_wmajority_rmajority_causaltrue.csv
+```
+
+---
+
+# 13. WFR Failure
+
+## 弱配置
+
+```bash
+python experiments/wfr_failure.py \
+  --scenario failure \
+  --write-concern 1 \
+  --read-concern local \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/wfr_failure_w1_rlocal_causalfalse.csv
+```
+
+## 强配置
+
+```bash
+python experiments/wfr_failure.py \
+  --scenario failure \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/wfr_failure_wmajority_rmajority_causaltrue.csv
+```
+
+---
+
+# 14. Network Partition 实验
+
+Partition 实验与 Failure 不同。
+
+Failure：
+
+```text
+MongoDB 容器停止运行
+```
+
+Partition：
+
+```text
+MongoDB 容器继续运行
+但从 Docker network 中断开
+```
+
+统一流程：
+
+```text
+Iteration 1-199
+正常运行
+
+Iteration 200
+自动检测当前 PRIMARY
+disconnect PRIMARY from Docker network
+
+Iteration 200-599
+Network Partition 状态
+
+Iteration 600
+重新连接原节点
+
+Iteration 600-1000
+Recovery
+```
+
+---
+
+# 15. RYW Partition
+
+## 弱配置
+
+```bash
+python experiments/ryw_partition.py \
+  --scenario partition \
+  --write-concern 1 \
+  --read-concern local \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/ryw_partition_w1_rlocal_causalfalse.csv
+```
+
+## 强配置
+
+```bash
+python experiments/ryw_partition.py \
+  --scenario partition \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/ryw_partition_wmajority_rmajority_causaltrue.csv
+```
+
+---
+
+# 16. MR Partition
+
+## 弱配置
+
+```bash
+python experiments/monotonic_reads_partition.py \
+  --scenario partition \
+  --write-concern 1 \
+  --read-concern local \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/mr_partition_w1_rlocal_causalfalse.csv
+```
+
+## 强配置
+
+```bash
+python experiments/monotonic_reads_partition.py \
+  --scenario partition \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/mr_partition_wmajority_rmajority_causaltrue.csv
+```
+
+---
+
+# 17. MW Partition
+
+## 弱配置
+
+```bash
+python experiments/monotonic_writes_partition.py \
+  --scenario partition \
+  --write-concern 1 \
+  --read-concern local \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/mw_partition_w1_rlocal_causalfalse.csv
+```
+
+## 强配置
+
+```bash
+python experiments/monotonic_writes_partition.py \
+  --scenario partition \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/mw_partition_wmajority_rmajority_causaltrue.csv
+```
+
+---
+
+# 18. WFR Partition
+
+## 弱配置
+
+```bash
+python experiments/wfr_partition.py \
+  --scenario partition \
+  --write-concern 1 \
+  --read-concern local \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/wfr_partition_w1_rlocal_causalfalse.csv
+```
+
+## 强配置
+
+```bash
+python experiments/wfr_partition.py \
+  --scenario partition \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
+```
+
+结果：
+
+```text
+results/raw/wfr_partition_wmajority_rmajority_causaltrue.csv
+```
+
+---
+
+# 19. 每次实验结束后的检查
+
+Failure 和 Partition 实验都会改变 Replica Set 状态。
+
+因此每跑完一组实验，建议先检查容器：
+
+```bash
+docker ps
+```
+
+应看到：
+
+```text
+mongo1
+mongo2
+mongo3
+```
+
+全部处于 `Up`。
+
+---
+
+## 检查 Replica Set
+
+```bash
+docker exec mongo1 mongosh --quiet --eval \
+'rs.status().members.forEach(m => print(m.name, m.stateStr))'
+```
+
+确认：
+
+```text
+1 PRIMARY
+2 SECONDARY
+```
+
+---
+
+## Partition 实验额外检查 Docker Network
+
+```bash
+docker network inspect mongo-consistency-project_mongodb-network
+```
+
+确认 `Containers` 中重新包含：
+
+```text
+mongo1
+mongo2
+mongo3
+```
+
+如果某节点没有重新加入网络，不要立即运行下一组 Partition 实验。
+
+---
+
+# 20. 语法检查
+
+如果修改了 Python 脚本，建议运行：
+
+```bash
+python -m py_compile experiments/wfr.py
+python -m py_compile experiments/ryw_failure.py
+python -m py_compile experiments/monotonic_reads_failure.py
+python -m py_compile experiments/monotonic_writes_failure.py
+python -m py_compile experiments/wfr_failure.py
+python -m py_compile experiments/ryw_partition.py
+python -m py_compile experiments/monotonic_reads_partition.py
+python -m py_compile experiments/monotonic_writes_partition.py
+python -m py_compile experiments/wfr_partition.py
+```
+
+如果没有任何输出，表示没有发现 Python syntax error。
+
+---
+
+# 21. 推荐运行顺序
+
+为了减少 Replica Set 状态混乱，建议按照以下顺序运行：
+
+```text
+WFR Normal Weak
+      ↓
+WFR Normal Strong
+      ↓
+RYW Failure Weak
+      ↓
+RYW Failure Strong
+      ↓
+MR Failure Weak
+      ↓
+MR Failure Strong
+      ↓
+MW Failure Weak
+      ↓
+MW Failure Strong
+      ↓
+WFR Failure Weak
+      ↓
+WFR Failure Strong
+      ↓
+RYW Partition Weak
+      ↓
+RYW Partition Strong
+      ↓
+MR Partition Weak
+      ↓
+MR Partition Strong
+      ↓
+MW Partition Weak
+      ↓
+MW Partition Strong
+      ↓
+WFR Partition Weak
+      ↓
+WFR Partition Strong
+```
+
+每次 Failure / Partition 实验完成后，应检查 Replica Set 和 Docker network 状态再开始下一次实验。
+
+---
+
+# 22. 实验结果位置
+
+所有结果默认保存在：
+
+```text
+results/raw/
+```
+
+可以查看：
+
+```bash
+ls -lah results/raw
+```
+
+每个 CSV 中通常会记录：
+
+```text
+timestamp
+iteration
+client_id
+operation
+read_concern
+write_concern
+causal_session
+scenario
+latency_ms
+success
+violation
+error
+```
+
+部分 Failure / Partition 文件还会记录：
+
+```text
+scenario_event
+target_node
+event_time
+```
+
+用于分析故障发生的具体位置。
+
+---
+
+# 23. 强弱配置速查
+
+| 配置 | Write Concern | Read Concern | Causal Session |
+| --- | --- | --- | --- |
+| Weak | `1` | `local` | False |
+| Strong | `majority` | `majority` | True |
+
+弱配置命令通常为：
+
+```bash
+--write-concern 1 \
+--read-concern local
+```
+
+强配置命令通常为：
+
+```bash
+--write-concern majority \
+--read-concern majority \
+--causal-session
+```
+
+---
+
+# 24. 常见问题
+
+## 问题 1：PRIMARY 和上一次实验不一样
+
+这是正常现象。
 
 例如：
 
 ```text
-Before fault:
+第一次：
 mongo1 PRIMARY
 
-Fault injected:
-mongo1 unavailable
-
-After election:
+发生 Failure 后：
 mongo2 PRIMARY
 ```
 
-另外一次可能为：
+不要手动修改脚本。
 
-```text
-Before:
-mongo2 PRIMARY
-
-After fault:
-mongo3 PRIMARY
-```
-
-说明实验脚本不能假设：
-
-```text
-mongo1 always PRIMARY
-```
-
-因此所有故障脚本均动态检测当前 PRIMARY。
+Failure 和 Partition 脚本会动态检测当前 PRIMARY。
 
 ---
 
-# 16. Availability 与 Failover
+## 问题 2：Partition 后 `docker ps` 仍然看到节点
 
-本项目使用 3 节点 Replica Set。
+这是正常的。
 
-当一个 PRIMARY 故障或被隔离时：
+Network Partition 只断开网络：
 
 ```text
-3 nodes
-↓
-1 node unavailable
-↓
-2 nodes remain
-↓
-2 / 3 = majority
+container = running
+network = disconnected
 ```
-
-剩余两个节点仍然能够形成多数派并进行 PRIMARY election。
 
 因此：
 
-```text
-Old PRIMARY unavailable
-        ↓
-Election
-        ↓
-New PRIMARY
-        ↓
-PyMongo topology update
-        ↓
-Application continues
+```bash
+docker ps
 ```
 
-在本次实验记录中，大多数业务操作均能在 scripted failover 后继续完成。
+仍然可以看到该节点。
 
 ---
 
-# 17. 实验结果总表
+## 问题 3：看到 `No PRIMARY detected after waiting 10 seconds`
 
-## Normal Scenario
+可能是 election 尚未在固定的 10 秒检查点完成。
 
-| Model | Weak | Strong |
-| RYW | 1.8% | 0.10%: |
-| MR | 6.10% | 0.00% |
-| MW | 0.00% | 0.00% |
-| WFR | 5.20% | 0.00% |
+如果实验仍然继续并最终成功，不一定表示 Replica Set 没有恢复。
 
-RYW 正常场景结果保存在：
+可以再次检查：
 
-```text
-results/raw/ryw_normal_w1_rlocal.csv
-results/raw/ryw_normal_wmajority_rmajority.csv
+```bash
+docker exec mongo1 mongosh --quiet --eval \
+'rs.status().members.forEach(m => print(m.name, m.stateStr))'
 ```
 
 ---
 
-## Primary Failure
+## 问题 4：Partition 实验中途退出
 
-| Model | Weak | Strong |
-| --- | ---: | ---: |
-| RYW | 81.70% | 0.00% |
-| MR | 14.60% | 0.00% |
-| MW | 0.00% | 0.00% |
-| WFR | 2.20% | 0.00% |
+首先检查：
+
+```bash
+docker network inspect mongo-consistency-project_mongodb-network
+```
+
+如果缺少某个 MongoDB 节点，可手动重新连接：
+
+```bash
+docker network connect \
+mongo-consistency-project_mongodb-network \
+mongo1
+```
+
+将最后的 `mongo1` 替换为实际被隔离的节点。
 
 ---
 
-## Network Partition
+# 25. 最简运行版本
 
-| Model | Weak | Strong |
-| --- | ---: | ---: |
-| RYW | 96.50% | 0.00% |
-| MR | 16.50% | 0.00% |
-| MW | 0.00% | 0.00% |
-| WFR | 1.80% | 0.00% |
+如果环境已经全部配置完成，只需要：
 
----
-
-# 18. 综合结果
-
-本项目最明显的实验结果是：
-
-> **Consistency configuration 对 Client-Centric Consistency 的影响比故障类型本身更加明显和稳定。**
-
-弱配置：
-
-```text
-w = 1
-readConcern = local
-causal consistency = disabled
+```bash
+cd mongo-consistency-project
+source venv/bin/activate
+docker-compose up -d
 ```
 
-实验表现：
+然后运行需要的实验。
 
-| Model | 观察结果 |
-| --- | --- |
-| RYW | 大量 violation |
-| MR | 存在明显 violation |
-| MW | 未观察到 violation |
-| WFR | 少量 violation |
+例如 WFR Partition 强配置：
 
-强配置：
-
-```text
-w = majority
-readConcern = majority
-causal consistency = enabled
+```bash
+python experiments/wfr_partition.py \
+  --scenario partition \
+  --write-concern majority \
+  --read-concern majority \
+  --causal-session \
+  --iterations 1000
 ```
 
-实验表现：
+实验完成后查看：
 
-```text
-RYW → no observed violations
-MR  → no observed violations
-MW  → no observed violations
-WFR → no observed violations
+```bash
+ls results/raw
 ```
-
-Primary Failure 和 Network Partition 会触发 election 和 topology change，但并没有产生一个统一的 violation-rate 增减规律。
-
 ---
