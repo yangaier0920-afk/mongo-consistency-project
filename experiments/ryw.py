@@ -2,6 +2,8 @@ import argparse
 import time
 import os
 import csv
+from contextlib import nullcontext
+
 from pymongo import MongoClient, ReadPreference, WriteConcern
 from pymongo.read_concern import ReadConcern
 
@@ -11,13 +13,24 @@ def parse_args():
     parser.add_argument("--read-concern", type=str, default="local", help="Read concern (e.g., local or majority)")
     parser.add_argument("--scenario", type=str, default="normal", help="Experiment scenario (normal/failure/partition)")
     parser.add_argument("--iterations", type=int, default=1000, help="Number of read/write operations")
+    parser.add_argument(
+        "--uri",
+        type=str,
+        default="mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0",
+        help="MongoDB replica set URI",
+    )
+    parser.add_argument(
+        "--causal-session",
+        action="store_true",
+        help="Run write/read operations inside one causally consistent session",
+    )
     return parser.parse_args()
 
 def main():
     args = parse_args()
     
     # 1. 连接到整个副本集
-    client = MongoClient("mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0")
+    client = MongoClient(args.uri)
     db = client["dsa5208_db"]
     
     # 2. 根据命令行参数配置 WriteConcern 和 ReadConcern
@@ -46,60 +59,81 @@ def main():
     print(f"=== 启动 RYW 实验 ===")
     print(f"配置: WriteConcern={args.write_concern}, ReadConcern={args.read_concern}")
     print(f"场景: {args.scenario}, 迭代次数: {args.iterations}")
+    print(f"Causal Session: {args.causal_session}")
     
     violations = 0
     logs = []
+
+    session_context = (
+        client.start_session(causal_consistency=True)
+        if args.causal_session
+        else nullcontext(None)
+    )
     
     # 4. 执行高频自动化读写循环
-    for i in range(1, args.iterations + 1):
-        written_version = i
-        success = True
-        observed_version = -1
-        is_violation = False
-        
-        start_time = time.time()
-        
-        try:
-            # 执行写操作 (提升版本号)
-            collection.update_one({"id": "item1"}, {"$set": {"version": written_version}})
+    with session_context as session:
+        for i in range(1, args.iterations + 1):
+            written_version = i
+            success = True
+            observed_version = -1
+            is_violation = False
+            error = ""
             
-            # 立即执行读操作
-            doc = collection.find_one({"id": "item1"})
-            if doc:
-                observed_version = doc.get("version", -1)
-                
-            # RYW 违规判定逻辑：如果读到的版本落后于刚刚写入的版本
-            if observed_version < written_version:
-                violations += 1
-                is_violation = True
-                
-        except Exception as e:
-            success = False
-            print(f"第 {i} 次操作失败: {e}")
+            start_time = time.time()
             
-        latency_ms = (time.time() - start_time) * 1000
-        
-        # 按照指南建议的标准格式记录日志
-        logs.append({
-            "timestamp": time.time(),
-            "client_id": "client_A",
-            "operation": "WRITE_THEN_READ",
-            "requested_version": written_version,
-            "observed_version": observed_version,
-            "read_concern": args.read_concern,
-            "write_concern": args.write_concern,
-            "scenario": args.scenario,
-            "latency_ms": round(latency_ms, 2),
-            "success": success,
-            "violation": is_violation
-        })
+            try:
+                # 执行写操作 (提升版本号)
+                collection.update_one(
+                    {"id": "item1"},
+                    {"$set": {"version": written_version}},
+                    session=session,
+                )
+                
+                # 立即执行读操作
+                doc = collection.find_one({"id": "item1"}, session=session)
+                if doc:
+                    observed_version = doc.get("version", -1)
+                    
+                # RYW 违规判定逻辑：如果读到的版本落后于刚刚写入的版本
+                if observed_version < written_version:
+                    violations += 1
+                    is_violation = True
+                    
+            except Exception as e:
+                success = False
+                error = str(e)
+                print(f"第 {i} 次操作失败: {e}")
+                
+            latency_ms = (time.time() - start_time) * 1000
+            
+            # 按照指南建议的标准格式记录日志
+            logs.append({
+                "timestamp": time.time(),
+                "client_id": "client_A",
+                "operation": "WRITE_THEN_READ",
+                "phase": args.scenario,
+                "requested_version": written_version,
+                "observed_version": observed_version,
+                "read_concern": args.read_concern,
+                "write_concern": args.write_concern,
+                "causal_session": args.causal_session,
+                "scenario": args.scenario,
+                "latency_ms": round(latency_ms, 2),
+                "success": success,
+                "violation": is_violation,
+                "error": error,
+            })
         
     # 5. 打印结果并保存至 CSV
     violation_rate = (violations / args.iterations) * 100
     print(f"\n实验完成! RYW 违背次数: {violations}/{args.iterations} (违背率: {violation_rate:.2f}%)")
     
     os.makedirs("results/raw", exist_ok=True)
-    filename = f"results/raw/ryw_{args.scenario}_w{args.write_concern}_r{args.read_concern}.csv"
+    filename = (
+        "results/raw/"
+        f"ryw_{args.scenario}_w{args.write_concern}_r{args.read_concern}"
+        f"_causal{str(args.causal_session).lower()}.csv"
+    )
     
     with open(filename, mode='w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=logs[0].keys())

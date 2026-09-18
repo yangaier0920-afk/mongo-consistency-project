@@ -7,8 +7,9 @@ import subprocess
 from pymongo import MongoClient, ReadPreference, WriteConcern
 from pymongo.read_concern import ReadConcern
 
+from common import docker_network_contains, resolve_docker_network
 
-NETWORK_NAME = "mongo-consistency-project_mongodb-network"
+NETWORK_NAME = None
 
 
 def parse_args():
@@ -20,6 +21,11 @@ def parse_args():
     parser.add_argument("--read-concern", type=str, default="local")
     parser.add_argument("--scenario", type=str, default="partition")
     parser.add_argument("--iterations", type=int, default=1000)
+    parser.add_argument(
+        "--network",
+        default=None,
+        help="Docker network name. If omitted, auto-detect *_mongodb-network.",
+    )
 
     parser.add_argument(
         "--causal-session",
@@ -82,7 +88,9 @@ def restore_node_network(node):
 
 
 def main():
+    global NETWORK_NAME
     args = parse_args()
+    NETWORK_NAME = resolve_docker_network(args.network)
 
     client = MongoClient(
         "mongodb://localhost:27017,"
@@ -127,6 +135,7 @@ def main():
     print(f"Causal Session = {args.causal_session}")
     print(f"Scenario       = {args.scenario}")
     print(f"Iterations     = {args.iterations}")
+    print(f"Docker network = {NETWORK_NAME}")
     print("----------------------------------------")
 
     violations = 0
@@ -136,161 +145,175 @@ def main():
     logs = []
     partitioned_node = None
 
-    with client.start_session(
-        causal_consistency=args.causal_session
-    ) as session:
+    try:
+        with client.start_session(
+            causal_consistency=args.causal_session
+        ) as session:
 
-        for i in range(1, args.iterations + 1):
+            for i in range(1, args.iterations + 1):
 
-            # 第 200 次：隔离当前 Primary
-            if (
-                args.scenario == "partition"
-                and i == 200
-            ):
-                print("\n========================================")
-                print("开始注入 Network Partition")
-                print("========================================")
+                # 第 200 次：隔离当前 Primary
+                if (
+                    args.scenario == "partition"
+                    and i == 200
+                ):
+                    print("\n========================================")
+                    print("开始注入 Network Partition")
+                    print("========================================")
 
-                try:
-                    partitioned_node = get_primary_node(
-                        client
-                    )
-
-                    print(
-                        f"[PARTITION] 当前 Primary = "
-                        f"{partitioned_node}"
-                    )
-
-                    if partitioned_node:
-                        partition_node(
-                            partitioned_node
+                    try:
+                        partitioned_node = get_primary_node(
+                            client
                         )
 
                         print(
-                            "[PARTITION] 等待剩余节点 "
-                            "进行 election..."
+                            f"[PARTITION] 当前 Primary = "
+                            f"{partitioned_node}"
                         )
 
-                except Exception as exc:
-                    print(
-                        f"[PARTITION] 注入失败: {exc}"
-                    )
+                        if partitioned_node:
+                            partition_node(
+                                partitioned_node
+                            )
 
-            # 第 600 次：恢复网络
-            if (
-                args.scenario == "partition"
-                and i == 600
-            ):
-                print("\n========================================")
-                print("开始恢复网络")
-                print("========================================")
+                            print(
+                                "[PARTITION] 等待剩余节点 "
+                                "进行 election..."
+                            )
 
-                if partitioned_node:
-                    try:
-                        restore_node_network(
-                            partitioned_node
-                        )
                     except Exception as exc:
                         print(
-                            f"[RECOVERY] 网络恢复失败: "
-                            f"{exc}"
+                            f"[PARTITION] 注入失败: {exc}"
                         )
 
-            if i < 200:
-                phase = "normal"
-            elif i < 600:
-                phase = "partition"
-            else:
-                phase = "recovery"
+                # 第 600 次：恢复网络
+                if (
+                    args.scenario == "partition"
+                    and i == 600
+                ):
+                    print("\n========================================")
+                    print("开始恢复网络")
+                    print("========================================")
 
-            written_version = i
+                    if partitioned_node:
+                        try:
+                            restore_node_network(
+                                partitioned_node
+                            )
+                        except Exception as exc:
+                            print(
+                                f"[RECOVERY] 网络恢复失败: "
+                                f"{exc}"
+                            )
 
-            success = True
-            observed_version = -1
-            is_violation = False
-            error_message = ""
+                if i < 200:
+                    phase = "normal"
+                elif i < 600:
+                    phase = "partition"
+                else:
+                    phase = "recovery"
 
-            start_time = time.time()
+                written_version = i
 
-            try:
-                collection.update_one(
-                    {"id": "item1"},
-                    {
-                        "$set": {
-                            "version": written_version,
-                            "last_writer": "client_A"
-                        }
-                    },
-                    session=session
-                )
+                success = True
+                observed_version = -1
+                is_violation = False
+                error_message = ""
 
-                doc = collection.find_one(
-                    {"id": "item1"},
-                    session=session
-                )
+                start_time = time.time()
 
-                if doc:
-                    observed_version = doc.get(
-                        "version",
-                        -1
+                try:
+                    collection.update_one(
+                        {"id": "item1"},
+                        {
+                            "$set": {
+                                "version": written_version,
+                                "last_writer": "client_A"
+                            }
+                        },
+                        session=session
                     )
 
-                if observed_version < written_version:
-                    violations += 1
-                    is_violation = True
+                    doc = collection.find_one(
+                        {"id": "item1"},
+                        session=session
+                    )
 
-                successful_operations += 1
+                    if doc:
+                        observed_version = doc.get(
+                            "version",
+                            -1
+                        )
 
+                    if observed_version < written_version:
+                        violations += 1
+                        is_violation = True
+
+                    successful_operations += 1
+
+                except Exception as exc:
+                    success = False
+                    failed_operations += 1
+                    error_message = str(exc)
+
+                    print(
+                        f"[ERROR] 第 {i} 次操作失败: {exc}"
+                    )
+
+                latency_ms = (
+                    time.time() - start_time
+                ) * 1000
+
+                logs.append({
+                    "iteration": i,
+                    "timestamp": time.time(),
+                    "client_id": "client_A",
+                    "operation": "WRITE_THEN_READ",
+                    "phase": phase,
+                    "scenario": args.scenario,
+                    "partitioned_node":
+                        partitioned_node or "",
+                    "requested_version":
+                        written_version,
+                    "observed_version":
+                        observed_version,
+                    "read_concern":
+                        args.read_concern,
+                    "write_concern":
+                        args.write_concern,
+                    "causal_session":
+                        args.causal_session,
+                    "latency_ms":
+                        round(latency_ms, 2),
+                    "success":
+                        success,
+                    "violation":
+                        is_violation,
+                    "error":
+                        error_message
+                })
+
+                if i % 100 == 0:
+                    print(
+                        f"[PROGRESS] "
+                        f"{i}/{args.iterations} | "
+                        f"phase={phase} | "
+                        f"violations={violations} | "
+                        f"failed={failed_operations}"
+                    )
+    finally:
+        if partitioned_node is not None:
+            try:
+                if not docker_network_contains(
+                    NETWORK_NAME,
+                    partitioned_node,
+                ):
+                    print(
+                        f"[RECOVERY] Safety reconnect: {partitioned_node}"
+                    )
+                    restore_node_network(partitioned_node)
             except Exception as exc:
-                success = False
-                failed_operations += 1
-                error_message = str(exc)
-
-                print(
-                    f"[ERROR] 第 {i} 次操作失败: {exc}"
-                )
-
-            latency_ms = (
-                time.time() - start_time
-            ) * 1000
-
-            logs.append({
-                "iteration": i,
-                "timestamp": time.time(),
-                "client_id": "client_A",
-                "operation": "WRITE_THEN_READ",
-                "phase": phase,
-                "scenario": args.scenario,
-                "partitioned_node":
-                    partitioned_node or "",
-                "requested_version":
-                    written_version,
-                "observed_version":
-                    observed_version,
-                "read_concern":
-                    args.read_concern,
-                "write_concern":
-                    args.write_concern,
-                "causal_session":
-                    args.causal_session,
-                "latency_ms":
-                    round(latency_ms, 2),
-                "success":
-                    success,
-                "violation":
-                    is_violation,
-                "error":
-                    error_message
-            })
-
-            if i % 100 == 0:
-                print(
-                    f"[PROGRESS] "
-                    f"{i}/{args.iterations} | "
-                    f"phase={phase} | "
-                    f"violations={violations} | "
-                    f"failed={failed_operations}"
-                )
+                print(f"WARNING: Safety recovery failed: {exc}")
 
     violation_rate = (
         violations / args.iterations

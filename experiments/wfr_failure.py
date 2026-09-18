@@ -14,6 +14,7 @@ from common import (
     collection_for_client,
     collection_for_direct_host,
     discover_members,
+    observe_dependency,
     parse_direct_hosts,
     replica_client,
     reset_collection,
@@ -372,6 +373,7 @@ def main():
                 v1_visible_on_observer = False
                 v2_visible_on_observer = False
                 is_violation = False
+                observer_check_order = "dependent_then_prerequisite"
 
                 # Alternate between initially discovered
                 # secondary nodes.
@@ -473,16 +475,11 @@ def main():
                         else read_host
                     )
 
-                    observed_v1 = (
-                        observer_collection.find_one(
-                            {"_id": prerequisite_id},
-                            session=session,
-                        )
-                    )
-
-                    observed_v2 = (
-                        observer_collection.find_one(
-                            {"_id": dependent_id},
+                    observed_v1, observed_v2, observer_check_order = (
+                        observe_dependency(
+                            observer_collection,
+                            prerequisite_id,
+                            dependent_id,
                             session=session,
                         )
                     )
@@ -552,6 +549,9 @@ def main():
                         ),
                         "v2_visible_on_observer": (
                             v2_visible_on_observer
+                        ),
+                        "observer_check_order": (
+                            observer_check_order
                         ),
                         "read_concern": (
                             args.read_concern

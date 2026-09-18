@@ -1,5 +1,6 @@
 import csv
 import os
+import subprocess
 import time
 
 from pymongo import MongoClient, ReadPreference, WriteConcern
@@ -9,6 +10,7 @@ from pymongo.read_concern import ReadConcern
 DEFAULT_URI = "mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0"
 DEFAULT_DIRECT_HOSTS = "localhost:27017,localhost:27018,localhost:27019"
 DEFAULT_DB = "dsa5208_db"
+DEFAULT_DOCKER_NETWORK = "mongo-consistency-project_mongodb-network"
 
 
 def parse_write_concern(value):
@@ -83,6 +85,59 @@ def discover_members(direct_hosts, timeout_s=20):
 
 def secondary_hosts(members):
     return [member["host"] for member in members if member["is_secondary"]]
+
+
+def resolve_docker_network(requested_network=None):
+    if requested_network:
+        return requested_network
+
+    result = subprocess.run(
+        ["docker", "network", "ls", "--format", "{{.Name}}"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    networks = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+
+    if DEFAULT_DOCKER_NETWORK in networks:
+        return DEFAULT_DOCKER_NETWORK
+
+    candidates = [name for name in networks if name.endswith("_mongodb-network")]
+    if len(candidates) == 1:
+        return candidates[0]
+
+    if candidates:
+        raise RuntimeError(
+            "Multiple MongoDB Docker networks found. Pass --network explicitly: "
+            + ", ".join(candidates)
+        )
+
+    raise RuntimeError(
+        "Cannot find a Docker network ending with '_mongodb-network'. "
+        "Start the stack with docker-compose up -d or pass --network."
+    )
+
+
+def docker_network_contains(network_name, container):
+    result = subprocess.run(
+        ["docker", "network", "inspect", network_name],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return container in result.stdout
+
+
+def observe_dependency(observer_collection, prerequisite_id, dependent_id, session=None):
+    observed_v2 = observer_collection.find_one(
+        {"_id": dependent_id},
+        session=session,
+    )
+    observed_v1 = observer_collection.find_one(
+        {"_id": prerequisite_id},
+        session=session,
+    )
+    return observed_v1, observed_v2, "dependent_then_prerequisite"
 
 
 def collection_for_client(

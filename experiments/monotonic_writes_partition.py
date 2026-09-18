@@ -14,15 +14,17 @@ from common import (
     collection_for_client,
     collection_for_direct_host,
     discover_members,
+    docker_network_contains,
     parse_direct_hosts,
     replica_client,
     reset_collection,
+    resolve_docker_network,
     save_csv,
     secondary_hosts,
 )
 
 
-NETWORK_NAME = "mongo-consistency-project_mongodb-network"
+NETWORK_NAME = None
 
 
 def parse_args():
@@ -46,6 +48,11 @@ def parse_args():
 
     parser.add_argument("--between-writes-delay-ms", type=float, default=0)
     parser.add_argument("--after-pair-delay-ms", type=float, default=0)
+    parser.add_argument(
+        "--network",
+        default=None,
+        help="Docker network name. If omitted, auto-detect *_mongodb-network.",
+    )
 
     return parser.parse_args()
 
@@ -145,7 +152,9 @@ def find_prefix_gap(sequences):
 
 
 def main():
+    global NETWORK_NAME
     args = parse_args()
+    NETWORK_NAME = resolve_docker_network(args.network)
 
     wc = build_write_concern(args.write_concern)
     rc = build_read_concern(args.read_concern)
@@ -206,6 +215,7 @@ def main():
     print(f"Causal Session = {args.causal_session}")
     print(f"Scenario       = {args.scenario}")
     print(f"Write pairs    = {args.iterations}")
+    print(f"Docker network = {NETWORK_NAME}")
     print("----------------------------------------")
 
     rows = []
@@ -423,18 +433,10 @@ def main():
         # Safety recovery
         if partitioned_node is not None:
             try:
-                result = subprocess.run(
-                    [
-                        "docker",
-                        "network",
-                        "inspect",
-                        NETWORK_NAME,
-                    ],
-                    capture_output=True,
-                    text=True,
-                )
-
-                if partitioned_node not in result.stdout:
+                if not docker_network_contains(
+                    NETWORK_NAME,
+                    partitioned_node,
+                ):
                     print(
                         f"Safety recovery: reconnecting "
                         f"{partitioned_node}"

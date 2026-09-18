@@ -14,15 +14,18 @@ from common import (
     collection_for_client,
     collection_for_direct_host,
     discover_members,
+    docker_network_contains,
+    observe_dependency,
     parse_direct_hosts,
     replica_client,
     reset_collection,
+    resolve_docker_network,
     save_csv,
     secondary_hosts,
 )
 
 
-NETWORK_NAME = "mongo-consistency-project_mongodb-network"
+NETWORK_NAME = None
 
 
 def parse_args():
@@ -69,6 +72,11 @@ def parse_args():
         "--after-v2-delay-ms",
         type=float,
         default=0,
+    )
+    parser.add_argument(
+        "--network",
+        default=None,
+        help="Docker network name. If omitted, auto-detect *_mongodb-network.",
     )
 
     return parser.parse_args()
@@ -146,7 +154,9 @@ def reconnect_container(container):
 
 
 def main():
+    global NETWORK_NAME
     args = parse_args()
+    NETWORK_NAME = resolve_docker_network(args.network)
 
     wc = build_write_concern(args.write_concern)
     rc = build_read_concern(args.read_concern)
@@ -240,6 +250,7 @@ def main():
         f"Initial Secondary targets: "
         f"{', '.join(secondaries)}"
     )
+    print(f"Docker network: {NETWORK_NAME}")
 
     print("\nPartition 计划:")
     print("Iteration 1-199   : 正常运行")
@@ -434,6 +445,7 @@ def main():
                 v1_visible_on_observer = False
                 v2_visible_on_observer = False
                 is_violation = False
+                observer_check_order = "dependent_then_prerequisite"
 
                 read_host, _, direct_read_collection = (
                     direct_secondary_readers[
@@ -533,22 +545,11 @@ def main():
                         else read_host
                     )
 
-                    observed_v1 = (
-                        observer_collection.find_one(
-                            {
-                                "_id":
-                                    prerequisite_id
-                            },
-                            session=session,
-                        )
-                    )
-
-                    observed_v2 = (
-                        observer_collection.find_one(
-                            {
-                                "_id":
-                                    dependent_id
-                            },
+                    observed_v1, observed_v2, observer_check_order = (
+                        observe_dependency(
+                            observer_collection,
+                            prerequisite_id,
+                            dependent_id,
                             session=session,
                         )
                     )
@@ -629,6 +630,9 @@ def main():
                         "v2_visible_on_observer":
                             v2_visible_on_observer,
 
+                        "observer_check_order":
+                            observer_check_order,
+
                         "read_concern":
                             args.read_concern,
 
@@ -688,20 +692,9 @@ def main():
         if partitioned_node is not None:
 
             try:
-                result = subprocess.run(
-                    [
-                        "docker",
-                        "network",
-                        "inspect",
-                        NETWORK_NAME,
-                    ],
-                    capture_output=True,
-                    text=True,
-                )
-
-                if (
-                    partitioned_node
-                    not in result.stdout
+                if not docker_network_contains(
+                    NETWORK_NAME,
+                    partitioned_node,
                 ):
 
                     print(
