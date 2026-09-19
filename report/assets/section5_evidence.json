@@ -1,0 +1,64 @@
+{
+  "batch": "results\\final\\matrix_20260918T135313Z_ee2bf4a7",
+  "profile_totals": {
+    "weak": {
+      "attempts": 36000,
+      "eligible": 35924,
+      "violations": 406,
+      "errors": 12,
+      "not_observed": 64
+    },
+    "majority": {
+      "attempts": 36000,
+      "eligible": 35988,
+      "violations": 16,
+      "errors": 12,
+      "not_observed": 0
+    },
+    "causal": {
+      "attempts": 36000,
+      "eligible": 35986,
+      "violations": 0,
+      "errors": 14,
+      "not_observed": 0
+    }
+  },
+  "error_types": {
+    "_OperationCancelled": 21,
+    "NetworkTimeout": 15,
+    "ExecutionTimeout": 1,
+    "NotPrimaryError": 1
+  },
+  "error_phases": {
+    "('partition', 'transition')": 18,
+    "('partition', 'fault')": 18,
+    "('partition', 'recovery')": 2
+  },
+  "normal_snapshot_polls": {
+    "('wfr', 'causal')": {
+      "eligible": 3000,
+      "multiple_polls": 0
+    },
+    "('wfr', 'weak')": {
+      "eligible": 3000,
+      "multiple_polls": 2950
+    },
+    "('wfr', 'majority')": {
+      "eligible": 3000,
+      "multiple_polls": 0
+    },
+    "('mw', 'causal')": {
+      "eligible": 3000,
+      "multiple_polls": 1
+    },
+    "('mw', 'weak')": {
+      "eligible": 3000,
+      "multiple_polls": 2683
+    },
+    "('mw', 'majority')": {
+      "eligible": 3000,
+      "multiple_polls": 2
+    }
+  },
+  "matrix_summary_sha256": "bd89e35bce6f25d889c61d075f78264310e512dfea29ab2f4c807ce42fea93e4"
+}

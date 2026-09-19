@@ -1,0 +1,1308 @@
+{
+  "audit_passed": true,
+  "runs": 108,
+  "attempts": 108000,
+  "current_source_matches": {
+    "audit.py": true,
+    "checks.py": true,
+    "faults.py": true,
+    "matrix.py": true,
+    "prepare.py": true,
+    "run.py": true,
+    "test_v2.py": true,
+    "__init__.py": true
+  },
+  "evidence": [
+    {
+      "folder": "20260919T061541Z_e9cd871b_mr_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T061556Z_48dd8ec8_wfr_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T061617Z_191d4434_wfr_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1959,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T061647Z_18463bc2_ryw_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T061659Z_626a7750_wfr_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 4094,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T061808Z_b8ff2d8d_ryw_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T061820Z_30002b5b_wfr_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 5551,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T061954Z_ee4ba8f7_mr_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T062017Z_2281d969_ryw_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1996
+      }
+    },
+    {
+      "folder": "20260919T062105Z_a590d830_mr_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062118Z_f5115c86_mr_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062211Z_fdf8c7e0_ryw_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T062233Z_e17c3fed_wfr_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062301Z_cd2d9dcb_mw_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T062336Z_25f253cd_mw_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T062401Z_de7aa3f8_wfr_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 999,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062500Z_eb147975_ryw_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062516Z_081d8d8a_mr_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1997
+      }
+    },
+    {
+      "folder": "20260919T062607Z_9fe26e80_wfr_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T062636Z_c04e3d36_mw_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 999,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T062731Z_052f8d88_ryw_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062756Z_7b47993e_mr_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062820Z_95b1cd6d_mw_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1922,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062848Z_6d42d969_mw_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062916Z_5c7bc845_mr_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062932Z_97617a69_mr_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T062956Z_764b976e_mw_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063016Z_67e40a36_mw_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 999,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063114Z_e8277ae2_ryw_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063135Z_e21f4e64_wfr_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 999,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T063233Z_bf52eb86_ryw_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063241Z_6140110c_mw_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 5602,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063413Z_197092ed_wfr_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063443Z_17c38ac2_mw_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 4151,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063549Z_122222b8_mr_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063608Z_9a64df54_ryw_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063629Z_ecce1e12_ryw_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063640Z_469f1fb7_wfr_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 4111,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063750Z_9f5f192e_ryw_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1998
+      }
+    },
+    {
+      "folder": "20260919T063838Z_51bde4d3_mw_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063856Z_f877eed7_mr_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T063922Z_198361c8_mw_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 4171,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064029Z_f6a05e01_ryw_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064045Z_ffecdbb3_wfr_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1967,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064116Z_f36bc924_ryw_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T064135Z_2e8eed05_ryw_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064156Z_e86481e7_mr_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T064219Z_4fd5a956_mr_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064230Z_04cef51e_mw_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 999,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064325Z_a5a0c5cf_mr_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064345Z_feba3d66_ryw_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064432Z_d1bf237b_mw_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1001,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T064451Z_9a57bba1_mw_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T064518Z_4df700ed_mw_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1001,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064545Z_736e0100_ryw_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064605Z_a05c8a89_mw_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 5624,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064736Z_59bb9030_wfr_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064759Z_daf058f5_wfr_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 5495,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064931Z_8138a40a_mw_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1954,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T064959Z_79e3b6e2_wfr_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T065024Z_eb8c7c04_wfr_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T065058Z_fa91d512_mr_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T065118Z_1e2afaaf_wfr_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T065200Z_b9aa33f9_mr_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T065257Z_26709fed_mw_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T065359Z_e9702a1a_wfr_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1001,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T065508Z_8ec92602_ryw_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T065517Z_e711b009_mr_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T065538Z_192fea5e_mr_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1997
+      }
+    },
+    {
+      "folder": "20260919T065635Z_add0a0a7_wfr_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T065718Z_6aa65efd_ryw_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T065733Z_4c0d9b0d_mr_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T065757Z_52c21a1f_mw_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T065825Z_a37af91d_mr_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T065845Z_240b87a5_wfr_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T065914Z_74459b01_wfr_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 5516,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070048Z_f484bb33_wfr_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070118Z_12fa697d_mw_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T070136Z_e1745809_mw_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 5505,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070308Z_71abf13b_mw_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 998,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070340Z_6867c91a_wfr_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1001,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T070401Z_7d0feda9_mr_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T070425Z_f355fde8_mr_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070440Z_4aa3af95_ryw_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070502Z_05c7ebed_wfr_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 999,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070537Z_c7736fd4_mw_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1997,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070606Z_3811b539_mr_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T070624Z_51fd9fc4_ryw_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1998
+      }
+    },
+    {
+      "folder": "20260919T070649Z_de8faa48_ryw_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070706Z_2d1ff116_mw_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T070734Z_75c8a1cf_ryw_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070747Z_e267c805_mr_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070843Z_523bed07_wfr_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1999,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070915Z_0c7d12e4_ryw_partition_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T070939Z_2562969d_mw_normal_majority",
+      "nodes": [
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1002,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T071000Z_469038d0_mw_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1001,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T071056Z_5e20386a_mr_partition_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T071122Z_8c5366f8_ryw_failure_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T071142Z_41c5f119_mw_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 4111,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T071249Z_8b405208_mr_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T071303Z_e4db8a5a_wfr_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 999,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T071401Z_326ed624_mr_partition_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1997
+      }
+    },
+    {
+      "folder": "20260919T071428Z_ad9ce631_ryw_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T071448Z_7f84e15f_wfr_normal_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 1000,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T071511Z_0dfd26ca_wfr_failure_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 4110,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T071620Z_1f1121d6_ryw_normal_causal",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 1999
+      }
+    },
+    {
+      "folder": "20260919T071632Z_2deed32b_ryw_normal_weak",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    },
+    {
+      "folder": "20260919T071642Z_b8857880_mr_failure_majority",
+      "nodes": [
+        "mongo1:27017",
+        "mongo2:27018",
+        "mongo3:27019"
+      ],
+      "concerns": {
+        "snapshot": 0,
+        "afterClusterTime": 0
+      }
+    }
+  ]
+}

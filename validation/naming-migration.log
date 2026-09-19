@@ -1,0 +1,4 @@
+primary: source and result hashes match
+replication: source and result hashes match
+pilot: source and result hashes match
+Exact naming-only migration: PASS

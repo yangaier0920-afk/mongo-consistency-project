@@ -1,0 +1,3 @@
+# Preserve exact published bytes for SHA-256 verification across Windows/Linux.
+# -text disables newline conversion; it does not disable textual diffs.
+* -text

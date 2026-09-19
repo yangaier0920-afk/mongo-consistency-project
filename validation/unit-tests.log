@@ -1,0 +1,31 @@
+test_ambiguous_network_rejected (experiments.test_consistency.FaultTests.test_ambiguous_network_rejected) ... ok
+test_disconnect_error_never_marks_injection_successful (experiments.test_consistency.FaultTests.test_disconnect_error_never_marks_injection_successful) ... ok
+test_docker_exit_failure_propagates (experiments.test_consistency.FaultTests.test_docker_exit_failure_propagates) ... ok
+test_network_name_is_discovered_even_with_main_suffix (experiments.test_consistency.FaultTests.test_network_name_is_discovered_even_with_main_suffix) ... ok
+test_partition_reconnect_preserves_aliases_and_is_idempotent (experiments.test_consistency.FaultTests.test_partition_reconnect_preserves_aliases_and_is_idempotent) ... ok
+test_successful_command_with_wrong_state_is_rejected (experiments.test_consistency.FaultTests.test_successful_command_with_wrong_state_is_rejected) ... ok
+test_wrong_explicit_network_rejected (experiments.test_consistency.FaultTests.test_wrong_explicit_network_rejected) ... ok
+test_command_trace_preserves_concerns_nodes_and_snapshot_time (experiments.test_consistency.RunnerFailureTests.test_command_trace_preserves_concerns_nodes_and_snapshot_time) ... ok
+test_mid_run_fault_error_preserves_evidence_and_attempts_recovery (experiments.test_consistency.RunnerFailureTests.test_mid_run_fault_error_preserves_evidence_and_attempts_recovery) ... ok
+test_denominator_excludes_errors_and_unobserved (experiments.test_consistency.VerdictTests.test_denominator_excludes_errors_and_unobserved) ... ok
+test_first_write_alone_does_not_test_order (experiments.test_consistency.VerdictTests.test_first_write_alone_does_not_test_order) ... ok
+test_invisible_dependent_is_not_a_pass (experiments.test_consistency.VerdictTests.test_invisible_dependent_is_not_a_pass) ... ok
+test_missing_dependency_in_one_snapshot (experiments.test_consistency.VerdictTests.test_missing_dependency_in_one_snapshot) ... ok
+test_no_observations_has_no_rate (experiments.test_consistency.VerdictTests.test_no_observations_has_no_rate) ... ok
+test_partial_mr_error_preserves_observed_regression (experiments.test_consistency.VerdictTests.test_partial_mr_error_preserves_observed_regression) ... ok
+test_valid_dependency (experiments.test_consistency.VerdictTests.test_valid_dependency) ... ok
+test_all_profiles_are_explicit (experiments.test_consistency.WorkloadTests.test_all_profiles_are_explicit) ... ok
+test_mr_remembers_reads_across_iterations (experiments.test_consistency.WorkloadTests.test_mr_remembers_reads_across_iterations) ... ok
+test_mw_missing_acknowledged_predecessor_is_detected (experiments.test_consistency.WorkloadTests.test_mw_missing_acknowledged_predecessor_is_detected) ... ok
+test_mw_missing_attempted_sequence_is_not_an_assumed_dependency (experiments.test_consistency.WorkloadTests.test_mw_missing_attempted_sequence_is_not_an_assumed_dependency) ... ok
+test_ryw_stale_read_is_a_violation (experiments.test_consistency.WorkloadTests.test_ryw_stale_read_is_a_violation) ... ok
+test_ryw_write_and_read_share_application_session (experiments.test_consistency.WorkloadTests.test_ryw_write_and_read_share_application_session) ... ok
+test_short_fault_run_requires_explicit_schedule (experiments.test_consistency.WorkloadTests.test_short_fault_run_requires_explicit_schedule) ... ok
+test_wfr_actual_missing_dependency_is_detected (experiments.test_consistency.WorkloadTests.test_wfr_actual_missing_dependency_is_detected) ... ok
+test_wfr_catchup_cannot_merge_different_snapshots (experiments.test_consistency.WorkloadTests.test_wfr_catchup_cannot_merge_different_snapshots) ... ok
+test_wfr_requires_client_b_to_observe_prerequisite (experiments.test_consistency.WorkloadTests.test_wfr_requires_client_b_to_observe_prerequisite) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.376s
+
+OK

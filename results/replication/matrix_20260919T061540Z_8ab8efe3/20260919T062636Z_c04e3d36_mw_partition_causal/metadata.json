@@ -1,0 +1,159 @@
+{
+  "schema_version": 3,
+  "run_id": "20260919T062636Z_c04e3d36",
+  "model": "mw",
+  "scenario": "partition",
+  "profile": "causal",
+  "write_concern": "majority",
+  "read_concern": "majority",
+  "causal_session": true,
+  "observer_read_concern": "snapshot",
+  "database": "dsa5208_v2",
+  "collection": "mw_20260919T062636Z_c04e3d36",
+  "python": "3.11.5 | packaged by Anaconda, Inc. | (main, Sep 11 2023, 13:26:23) [MSC v.1916 64 bit (AMD64)]",
+  "pymongo": "4.18.0",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "iterations": 1000,
+  "fault_at": 200,
+  "recover_at": 600,
+  "timeout_ms": 5000,
+  "observe_timeout_ms": 1000,
+  "interval_ms": 0,
+  "retry_reads": false,
+  "retry_writes": false,
+  "status": "valid",
+  "fault_position": "between_dependent_operations",
+  "measurement": "committed_dependency_visibility",
+  "direct_hosts": [
+    "localhost:27017",
+    "localhost:27018",
+    "localhost:27019"
+  ],
+  "application_read_route": "primary",
+  "observer_read_route": "secondary",
+  "fault_mechanism": "docker_network_disconnect_primary",
+  "source_sha256": {
+    "audit.py": "4fbefd0f7a5eb09eda95933fd521ee5535252d34e5da61c7c83aa9e8a04cb64b",
+    "checks.py": "15765c3fceb07614ea0bfa964a1b4b209ec93e806f6995333339b2a363ba6d69",
+    "faults.py": "99519c6906be5f88c1aff967582efe18b64c3e1d885184f0055cca328fd6e43a",
+    "matrix.py": "3ff949c214952956804a9ee49fc5ec6b2111424e57b49a1400e674702e2f9945",
+    "prepare.py": "3758ba25d929698cbafef3d170735c8ea76fa8ebb8d342865aea3ae88e7272ea",
+    "run.py": "0b504462a1ead2c9042e740779e2f40500e348b02da0dea2eb6e8661aedb187d",
+    "test_v2.py": "d1e2a958d85ea6e4aaaf9466ced0b7da2f45dc9518e7e418401cfa0eb8536179",
+    "__init__.py": "f2191a907cd48388ce5363716f58017fea2065b0d3fc40e1f937db98e3de1ca5"
+  },
+  "initial_topology": [
+    {
+      "host": "localhost:27017",
+      "member": "mongo1:27017",
+      "primary": false,
+      "secondary": true,
+      "set_name": "rs0"
+    },
+    {
+      "host": "localhost:27018",
+      "member": "mongo2:27018",
+      "primary": true,
+      "secondary": false,
+      "set_name": "rs0"
+    },
+    {
+      "host": "localhost:27019",
+      "member": "mongo3:27019",
+      "primary": false,
+      "secondary": true,
+      "set_name": "rs0"
+    }
+  ],
+  "mongodb": "8.0.29",
+  "member_versions": {
+    "localhost:27017": "8.0.29",
+    "localhost:27018": "8.0.29",
+    "localhost:27019": "8.0.29"
+  },
+  "replica_config": {
+    "_id": "rs0",
+    "version": 1,
+    "term": 169,
+    "members": [
+      {
+        "_id": 0,
+        "host": "mongo1:27017",
+        "arbiterOnly": false,
+        "buildIndexes": true,
+        "hidden": false,
+        "priority": 1.0,
+        "tags": {},
+        "secondaryDelaySecs": 0,
+        "votes": 1
+      },
+      {
+        "_id": 1,
+        "host": "mongo2:27018",
+        "arbiterOnly": false,
+        "buildIndexes": true,
+        "hidden": false,
+        "priority": 1.0,
+        "tags": {},
+        "secondaryDelaySecs": 0,
+        "votes": 1
+      },
+      {
+        "_id": 2,
+        "host": "mongo3:27019",
+        "arbiterOnly": false,
+        "buildIndexes": true,
+        "hidden": false,
+        "priority": 1.0,
+        "tags": {},
+        "secondaryDelaySecs": 0,
+        "votes": 1
+      }
+    ],
+    "protocolVersion": 1,
+    "writeConcernMajorityJournalDefault": true,
+    "settings": {
+      "chainingAllowed": true,
+      "heartbeatIntervalMillis": 2000,
+      "heartbeatTimeoutSecs": 10,
+      "electionTimeoutMillis": 10000,
+      "catchUpTimeoutMillis": -1,
+      "catchUpTakeoverDelayMillis": 30000,
+      "getLastErrorModes": {},
+      "getLastErrorDefaults": {
+        "w": 1,
+        "wtimeout": 0
+      },
+      "replicaSetId": "6a9e9aa33f84ee499f9b8a58"
+    }
+  },
+  "network": "mongo-consistency-project_mongodb-network",
+  "final_topology": [
+    {
+      "host": "localhost:27017",
+      "member": "mongo1:27017",
+      "primary": false,
+      "secondary": true,
+      "set_name": "rs0"
+    },
+    {
+      "host": "localhost:27018",
+      "member": "mongo2:27018",
+      "primary": false,
+      "secondary": true,
+      "set_name": "rs0"
+    },
+    {
+      "host": "localhost:27019",
+      "member": "mongo3:27019",
+      "primary": true,
+      "secondary": false,
+      "set_name": "rs0"
+    }
+  ],
+  "fatal_error": "",
+  "recovery_error": "",
+  "fault_target": "mongo2",
+  "fault_injected": true,
+  "fault_restored": true
+}
