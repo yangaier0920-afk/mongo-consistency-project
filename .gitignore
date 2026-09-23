@@ -1,9 +1,7 @@
-# 排除 Python 虚拟环境
+.venv/
 venv/
-
-# 排除本地数据库存储文件夹
-data/
-
-# 排除系统临时文件
 __pycache__/
+*.pyc
 .DS_Store
+data/
+results/reruns/

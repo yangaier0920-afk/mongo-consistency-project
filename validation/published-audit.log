@@ -1,0 +1,48 @@
+Auditing primary
+{
+  "audit_passed": true,
+  "runs": 108,
+  "attempts": 108000,
+  "current_source_matches": {
+    "audit.py": true,
+    "checks.py": true,
+    "faults.py": true,
+    "matrix.py": true,
+    "prepare.py": true,
+    "run.py": true,
+    "test_v2.py": true,
+    "__init__.py": true
+  }
+}
+Auditing replication
+{
+  "audit_passed": true,
+  "runs": 108,
+  "attempts": 108000,
+  "current_source_matches": {
+    "audit.py": true,
+    "checks.py": true,
+    "faults.py": true,
+    "matrix.py": true,
+    "prepare.py": true,
+    "run.py": true,
+    "test_v2.py": true,
+    "__init__.py": true
+  }
+}
+Auditing pilot
+{
+  "audit_passed": true,
+  "runs": 36,
+  "attempts": 1080,
+  "current_source_matches": {
+    "audit.py": true,
+    "checks.py": true,
+    "faults.py": true,
+    "matrix.py": true,
+    "prepare.py": true,
+    "run.py": true,
+    "test_v2.py": true,
+    "__init__.py": true
+  }
+}

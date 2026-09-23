@@ -1,0 +1,481 @@
+[
+  {
+    "case": "A",
+    "source": "results/final/matrix_20260918T135313Z_ee2bf4a7/20260918T140940Z_0ded3bba_ryw_failure_majority",
+    "operation": {
+      "run_id": "20260918T140940Z_0ded3bba",
+      "iteration": "1",
+      "phase": "normal",
+      "start_time": "1789740581.183293",
+      "end_time": "1789740581.2217362",
+      "latency_ms": "38.644",
+      "management_ms": "0",
+      "workload_ms": "38.644",
+      "verdict": "violation",
+      "error": "",
+      "last_stage": "read_own_write",
+      "details": {
+        "write_acknowledged": true,
+        "observed_version": null
+      }
+    },
+    "events": [
+      {
+        "line_number": 22,
+        "time": 1789740581.183293,
+        "monotonic_ns": 276918062000000,
+        "event": "command_started",
+        "iteration": 1,
+        "stage": "first_write",
+        "command": "insert",
+        "request_id": 9961,
+        "node": [
+          "mongo3",
+          27019
+        ],
+        "read_concern": null,
+        "write_concern": {
+          "wtimeout": 5000,
+          "w": "majority"
+        },
+        "has_session": true
+      },
+      {
+        "line_number": 23,
+        "time": 1789740581.1893911,
+        "monotonic_ns": 276918078000000,
+        "event": "command_succeeded",
+        "iteration": 1,
+        "stage": "first_write",
+        "command": "insert",
+        "request_id": 9961,
+        "node": [
+          "mongo3",
+          27019
+        ],
+        "operation_time": "Timestamp(1789740581, 3)",
+        "snapshot_time": "",
+        "duration_micros": 16000
+      },
+      {
+        "line_number": 24,
+        "time": 1789740581.2187355,
+        "monotonic_ns": 276918109000000,
+        "event": "command_started",
+        "iteration": 1,
+        "stage": "read_own_write",
+        "command": "find",
+        "request_id": 2995,
+        "node": [
+          "mongo2",
+          27018
+        ],
+        "read_concern": {
+          "level": "majority"
+        },
+        "write_concern": null,
+        "has_session": true
+      },
+      {
+        "line_number": 25,
+        "time": 1789740581.2217362,
+        "monotonic_ns": 276918109000000,
+        "event": "command_succeeded",
+        "iteration": 1,
+        "stage": "read_own_write",
+        "command": "find",
+        "request_id": 2995,
+        "node": [
+          "mongo2",
+          27018
+        ],
+        "operation_time": "Timestamp(1789740578, 37)",
+        "snapshot_time": "",
+        "duration_micros": 0
+      }
+    ]
+  },
+  {
+    "case": "B",
+    "source": "results/final/matrix_20260918T135313Z_ee2bf4a7/20260918T140739Z_59a7a19d_mr_normal_majority",
+    "operation": {
+      "run_id": "20260918T140739Z_59a7a19d",
+      "iteration": "1",
+      "phase": "normal",
+      "start_time": "1789740459.70894",
+      "end_time": "1789740459.7548018",
+      "latency_ms": "44.997",
+      "management_ms": "0",
+      "workload_ms": "44.997",
+      "verdict": "violation",
+      "error": "",
+      "last_stage": "read_secondary",
+      "details": {
+        "background_write_acknowledged": true,
+        "reads": [
+          {
+            "version": 1,
+            "max_seen_before": -1,
+            "violation": false
+          },
+          {
+            "version": -1,
+            "max_seen_before": 1,
+            "violation": true
+          }
+        ]
+      }
+    },
+    "events": [
+      {
+        "line_number": 21,
+        "time": 1789740459.7196114,
+        "monotonic_ns": 276796609000000,
+        "event": "command_started",
+        "iteration": 1,
+        "stage": "first_write",
+        "command": "update",
+        "request_id": 491,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "read_concern": null,
+        "write_concern": {
+          "wtimeout": 5000,
+          "w": "majority"
+        },
+        "has_session": true
+      },
+      {
+        "line_number": 22,
+        "time": 1789740459.737134,
+        "monotonic_ns": 276796625000000,
+        "event": "command_succeeded",
+        "iteration": 1,
+        "stage": "first_write",
+        "command": "update",
+        "request_id": 491,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "operation_time": "Timestamp(1789740459, 3)",
+        "snapshot_time": "",
+        "duration_micros": 16000
+      },
+      {
+        "line_number": 23,
+        "time": 1789740459.7384622,
+        "monotonic_ns": 276796625000000,
+        "event": "command_started",
+        "iteration": 1,
+        "stage": "read_primary",
+        "command": "find",
+        "request_id": 2995,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "read_concern": {
+          "level": "majority"
+        },
+        "write_concern": null,
+        "has_session": true
+      },
+      {
+        "line_number": 24,
+        "time": 1789740459.7424402,
+        "monotonic_ns": 276796625000000,
+        "event": "command_succeeded",
+        "iteration": 1,
+        "stage": "read_primary",
+        "command": "find",
+        "request_id": 2995,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "operation_time": "Timestamp(1789740459, 3)",
+        "snapshot_time": "",
+        "duration_micros": 0
+      },
+      {
+        "line_number": 25,
+        "time": 1789740459.750229,
+        "monotonic_ns": 276796640000000,
+        "event": "command_started",
+        "iteration": 1,
+        "stage": "read_secondary",
+        "command": "find",
+        "request_id": 4827,
+        "node": [
+          "mongo3",
+          27019
+        ],
+        "read_concern": {
+          "level": "majority"
+        },
+        "write_concern": null,
+        "has_session": true
+      },
+      {
+        "line_number": 26,
+        "time": 1789740459.754165,
+        "monotonic_ns": 276796640000000,
+        "event": "command_succeeded",
+        "iteration": 1,
+        "stage": "read_secondary",
+        "command": "find",
+        "request_id": 4827,
+        "node": [
+          "mongo3",
+          27019
+        ],
+        "operation_time": "Timestamp(1789740459, 1)",
+        "snapshot_time": "",
+        "duration_micros": 0
+      }
+    ]
+  },
+  {
+    "case": "C",
+    "source": "results/final/matrix_20260918T135313Z_ee2bf4a7/20260918T141425Z_308f5d42_mr_failure_weak",
+    "operation": {
+      "run_id": "20260918T141425Z_308f5d42",
+      "iteration": "201",
+      "phase": "fault",
+      "start_time": "1789740875.734443",
+      "end_time": "1789740875.7496848",
+      "latency_ms": "15.256",
+      "management_ms": "0",
+      "workload_ms": "15.256",
+      "verdict": "violation",
+      "error": "",
+      "last_stage": "read_secondary",
+      "details": {
+        "background_write_acknowledged": true,
+        "reads": [
+          {
+            "version": 201,
+            "max_seen_before": 200,
+            "violation": false
+          },
+          {
+            "version": 200,
+            "max_seen_before": 201,
+            "violation": true
+          }
+        ]
+      }
+    },
+    "events": [
+      {
+        "line_number": 1226,
+        "time": 1789740875.740018,
+        "monotonic_ns": 277212625000000,
+        "event": "command_started",
+        "iteration": 201,
+        "stage": "first_write",
+        "command": "update",
+        "request_id": 26534,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "read_concern": null,
+        "write_concern": {
+          "wtimeout": 5000,
+          "w": 1
+        },
+        "has_session": true
+      },
+      {
+        "line_number": 1227,
+        "time": 1789740875.7431717,
+        "monotonic_ns": 277212625000000,
+        "event": "command_succeeded",
+        "iteration": 201,
+        "stage": "first_write",
+        "command": "update",
+        "request_id": 26534,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "operation_time": "Timestamp(1789740875, 1)",
+        "snapshot_time": "",
+        "duration_micros": 0
+      },
+      {
+        "line_number": 1228,
+        "time": 1789740875.7441614,
+        "monotonic_ns": 277212625000000,
+        "event": "command_started",
+        "iteration": 201,
+        "stage": "read_primary",
+        "command": "find",
+        "request_id": 5556,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "read_concern": {
+          "level": "local"
+        },
+        "write_concern": null,
+        "has_session": true
+      },
+      {
+        "line_number": 1229,
+        "time": 1789740875.7466886,
+        "monotonic_ns": 277212625000000,
+        "event": "command_succeeded",
+        "iteration": 201,
+        "stage": "read_primary",
+        "command": "find",
+        "request_id": 5556,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "operation_time": "Timestamp(1789740875, 1)",
+        "snapshot_time": "",
+        "duration_micros": 0
+      },
+      {
+        "line_number": 1230,
+        "time": 1789740875.7466886,
+        "monotonic_ns": 277212625000000,
+        "event": "command_started",
+        "iteration": 201,
+        "stage": "read_secondary",
+        "command": "find",
+        "request_id": 1993,
+        "node": [
+          "mongo3",
+          27019
+        ],
+        "read_concern": {
+          "level": "local"
+        },
+        "write_concern": null,
+        "has_session": true
+      },
+      {
+        "line_number": 1231,
+        "time": 1789740875.7496848,
+        "monotonic_ns": 277212640000000,
+        "event": "command_succeeded",
+        "iteration": 201,
+        "stage": "read_secondary",
+        "command": "find",
+        "request_id": 1993,
+        "node": [
+          "mongo3",
+          27019
+        ],
+        "operation_time": "Timestamp(1789740869, 24)",
+        "snapshot_time": "",
+        "duration_micros": 15000
+      }
+    ]
+  },
+  {
+    "case": "D",
+    "source": "results/final/matrix_20260918T135313Z_ee2bf4a7/20260918T135423Z_19292993_ryw_normal_causal",
+    "operation": {
+      "run_id": "20260918T135423Z_19292993",
+      "iteration": "1",
+      "phase": "normal",
+      "start_time": "1789739663.9115193",
+      "end_time": "1789739663.9406686",
+      "latency_ms": "29.112",
+      "management_ms": "0",
+      "workload_ms": "29.112",
+      "verdict": "pass",
+      "error": "",
+      "last_stage": "read_own_write",
+      "details": {
+        "write_acknowledged": true,
+        "observed_version": 1
+      }
+    },
+    "events": [
+      {
+        "line_number": 21,
+        "time": 1789739663.9120708,
+        "monotonic_ns": 276000796000000,
+        "event": "command_started",
+        "iteration": 1,
+        "stage": "first_write",
+        "command": "insert",
+        "request_id": 9961,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "read_concern": null,
+        "write_concern": {
+          "wtimeout": 5000,
+          "w": "majority"
+        },
+        "has_session": true
+      },
+      {
+        "line_number": 22,
+        "time": 1789739663.9184878,
+        "monotonic_ns": 276000796000000,
+        "event": "command_succeeded",
+        "iteration": 1,
+        "stage": "first_write",
+        "command": "insert",
+        "request_id": 9961,
+        "node": [
+          "mongo1",
+          27017
+        ],
+        "operation_time": "Timestamp(1789739663, 3)",
+        "snapshot_time": "",
+        "duration_micros": 0
+      },
+      {
+        "line_number": 23,
+        "time": 1789739663.9377093,
+        "monotonic_ns": 276000812000000,
+        "event": "command_started",
+        "iteration": 1,
+        "stage": "read_own_write",
+        "command": "find",
+        "request_id": 2995,
+        "node": [
+          "mongo2",
+          27018
+        ],
+        "read_concern": {
+          "level": "majority",
+          "afterClusterTime": "Timestamp(1789739663, 3)"
+        },
+        "write_concern": null,
+        "has_session": true
+      },
+      {
+        "line_number": 24,
+        "time": 1789739663.9406686,
+        "monotonic_ns": 276000812000000,
+        "event": "command_succeeded",
+        "iteration": 1,
+        "stage": "read_own_write",
+        "command": "find",
+        "request_id": 2995,
+        "node": [
+          "mongo2",
+          27018
+        ],
+        "operation_time": "Timestamp(1789739663, 3)",
+        "snapshot_time": "",
+        "duration_micros": 0
+      }
+    ]
+  }
+]

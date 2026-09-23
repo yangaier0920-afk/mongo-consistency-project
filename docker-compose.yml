@@ -1,6 +1,6 @@
 services:
   mongo1:
-    image: mongo:8.0
+    image: mongo:8.0.29
     container_name: mongo1
     hostname: mongo1
     restart: unless-stopped
@@ -14,7 +14,7 @@ services:
       - mongodb-network
 
   mongo2:
-    image: mongo:8.0
+    image: mongo:8.0.29
     container_name: mongo2
     hostname: mongo2
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
       - mongodb-network
 
   mongo3:
-    image: mongo:8.0
+    image: mongo:8.0.29
     container_name: mongo3
     hostname: mongo3
     restart: unless-stopped

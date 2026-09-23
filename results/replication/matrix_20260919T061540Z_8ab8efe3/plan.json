@@ -1,0 +1,689 @@
+{
+  "schema_version": 3,
+  "args": {
+    "models": [
+      "ryw",
+      "mr",
+      "mw",
+      "wfr"
+    ],
+    "scenarios": [
+      "normal",
+      "failure",
+      "partition"
+    ],
+    "profiles": [
+      "weak",
+      "majority",
+      "causal"
+    ],
+    "iterations": 1000,
+    "fault_at": 200,
+    "recover_at": 600,
+    "repeats": 3,
+    "seed": 5208,
+    "output": "results\\reproduce_full",
+    "timeout_ms": 5000,
+    "observe_timeout_ms": 1000
+  },
+  "schedule": [
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 1,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 1,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 2,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "partition",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "mw",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "partition",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "failure",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "normal",
+      "profile": "majority"
+    },
+    {
+      "repeat": 3,
+      "model": "wfr",
+      "scenario": "failure",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "causal"
+    },
+    {
+      "repeat": 3,
+      "model": "ryw",
+      "scenario": "normal",
+      "profile": "weak"
+    },
+    {
+      "repeat": 3,
+      "model": "mr",
+      "scenario": "failure",
+      "profile": "majority"
+    }
+  ],
+  "source_sha256": {
+    "audit.py": "4fbefd0f7a5eb09eda95933fd521ee5535252d34e5da61c7c83aa9e8a04cb64b",
+    "checks.py": "15765c3fceb07614ea0bfa964a1b4b209ec93e806f6995333339b2a363ba6d69",
+    "faults.py": "99519c6906be5f88c1aff967582efe18b64c3e1d885184f0055cca328fd6e43a",
+    "matrix.py": "3ff949c214952956804a9ee49fc5ec6b2111424e57b49a1400e674702e2f9945",
+    "prepare.py": "3758ba25d929698cbafef3d170735c8ea76fa8ebb8d342865aea3ae88e7272ea",
+    "run.py": "0b504462a1ead2c9042e740779e2f40500e348b02da0dea2eb6e8661aedb187d",
+    "test_v2.py": "d1e2a958d85ea6e4aaaf9466ced0b7da2f45dc9518e7e418401cfa0eb8536179",
+    "__init__.py": "f2191a907cd48388ce5363716f58017fea2065b0d3fc40e1f937db98e3de1ca5"
+  }
+}

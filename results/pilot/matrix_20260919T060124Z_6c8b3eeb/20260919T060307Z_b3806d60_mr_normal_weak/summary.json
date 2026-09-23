@@ -1,0 +1,39 @@
+{
+  "run_valid": true,
+  "overall": {
+    "attempts": 30,
+    "eligible": 30,
+    "coverage": 1.0,
+    "violations": 2,
+    "violation_rate": 0.06666666666666667,
+    "errors": 0,
+    "not_observed": 0,
+    "error_rate": 0.0,
+    "latency_p50_ms": 10.483,
+    "latency_p95_ms": 12.205,
+    "eligible_workload_p50_ms": 10.483,
+    "eligible_workload_p95_ms": 12.205,
+    "successful_mr_reads": 60,
+    "mr_read_regressions": 2,
+    "mr_read_regression_rate": 0.03333333333333333
+  },
+  "by_phase": {
+    "normal": {
+      "attempts": 30,
+      "eligible": 30,
+      "coverage": 1.0,
+      "violations": 2,
+      "violation_rate": 0.06666666666666667,
+      "errors": 0,
+      "not_observed": 0,
+      "error_rate": 0.0,
+      "latency_p50_ms": 10.483,
+      "latency_p95_ms": 12.205,
+      "eligible_workload_p50_ms": 10.483,
+      "eligible_workload_p95_ms": 12.205,
+      "successful_mr_reads": 60,
+      "mr_read_regressions": 2,
+      "mr_read_regression_rate": 0.03333333333333333
+    }
+  }
+}
